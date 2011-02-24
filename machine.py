@@ -29,6 +29,10 @@ class Game:
         self.bg = background.convert()
         self.bg.fill((200, 220, 250))
 
+        self.snd_proom = pygame.mixer.Sound('snd/proom.ogg')
+        self.snd_njiin = pygame.mixer.Sound('snd/njiin.ogg')
+        
+
         self.ground = self.load('tausta.png')
         self.machine = self.load('kaivuri.png')
         self.bucket = self.load('kauha.png')
@@ -82,7 +86,7 @@ class Game:
         trans = Color(0,0,0,0)
         if self.bstate == CLOSE and self.ground_y != None:
             for x in range(self.ground_x -10, self.ground_x + 10):
-                for y in range(self.ground_y - 10, self.ground_y + 10):
+                for y in range(0, self.ground_y + 10):
                     color = self.ground.get_at((x,y))
                     if color.a > 100:
                         self.materials.append(color)
@@ -107,7 +111,7 @@ class Game:
         bh = size[1]
 
         x = self.x + bw/2 + 90 *self.dir
-        botttom = self.y + bh/2
+        bottom = self.y + bh/2
         if self.ground_y != None:
             bottom = self.ground_y
     
@@ -155,13 +159,16 @@ class Game:
                 if pressed[K_LEFT]:
                     self.x -= 3
                     self.dir = -1
+                    self.snd_proom.play()
                 if pressed[K_RIGHT]:
                     self.x += 3
                     self.dir = 1
+                    self.snd_proom.play()
             else:
                 if pressed[K_LEFT] or pressed[K_RIGHT]:
                     flag = True
             if flag or pressed[K_SPACE]:
+                self.snd_njiin.play()
                 if self.bstate in [GO_DOWN, GO_UP]:
                     self.t += 0.05
                 else:
